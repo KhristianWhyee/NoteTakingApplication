@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Elevane — Performance Marketing Studio</title>
+<meta name="description" content="Elevane is a performance marketing studio. We turn paid media into growth you can put a number on — measured, tested, and multiplied." />
+
+<!-- Fonts: Fraunces (display), Instrument Sans (body), Space Mono (data/labels) -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Instrument+Sans:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+
+<style>
+/* ============================================================
+   ELEVANE — Performance Marketing Studio
+   Light & editorial. One self-contained file.
+   Brand tokens (swap here to rebrand):
+   ============================================================ */
+:root{
+  /* Brand */
+  --paper:        #F7F5F0;   /* warm editorial paper           */
+  --paper-2:      #FDFCF9;   /* raised surface / cards         */
+  --ink:          #1A1B23;   /* wordmark near-black            */
+  --ink-soft:     #3B3B44;
+  --muted:        #6B6B63;   /* secondary text (AA on paper)   */
+  --line:         #E5DFD3;   /* hairline borders               */
+  --line-strong:  #D8D1C2;
+
+  /* Accent — from the Elevane logo (orange -> red) */
+  --orange:       #FF7A18;
+  --red:          #E4231C;
+  --accent-text:  #C2181A;   /* AA on paper for text/links     */
+  --accent-ink:   #7A0F10;   /* deep for pressed/underlines    */
+  --grad:         linear-gradient(165deg, var(--orange) 0%, var(--red) 78%);
+
+  /* Type */
+  --f-display: "Fraunces", Georgia, "Times New Roman", serif;
+  --f-body:    "Instrument Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --f-mono:    "Space Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  /* Rhythm */
+  --maxw: 1200px;
+  --gutter: clamp(20px, 5vw, 64px);
+  --s-1: 8px;  --s-2: 16px; --s-3: 24px; --s-4: 40px;
+  --s-5: 64px; --s-6: 96px; --s-7: 140px;
+  --radius: 14px;
+
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+*,*::before,*::after{ box-sizing:border-box; }
+html{ scroll-behavior:smooth; -webkit-text-size-adjust:100%; }
+@media (prefers-reduced-motion: reduce){ html{ scroll-behavior:auto; } }
+
+body{
+  margin:0;
+  background:var(--paper);
+  color:var(--ink);
+  font-family:var(--f-body);
+  font-size:17px;
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+  overflow-x:hidden;
+}
+
+/* Subtle paper grain via layered radial tints (very cheap, no images) */
+body::before{
+  content:"";
+  position:fixed; inset:0; z-index:-1; pointer-events:none;
+  background:
+    radial-gradient(1200px 800px at 78% -10%, rgba(255,122,24,0.06), transparent 60%),
+    radial-gradient(900px 700px at 8% 110%, rgba(228,35,28,0.045), transparent 55%);
+}
+
+h1,h2,h3{ font-family:var(--f-display); font-weight:600; line-height:1.02; letter-spacing:-0.02em; margin:0; }
+p{ margin:0; }
+a{ color:inherit; text-decoration:none; }
+img,svg{ display:block; max-width:100%; }
+
+.wrap{ width:100%; max-width:var(--maxw); margin-inline:auto; padding-inline:var(--gutter); }
+
+/* Eyebrow / mono label — encodes the "measurement" theme */
+.eyebrow{
+  font-family:var(--f-mono); font-size:12px; font-weight:700;
+  letter-spacing:0.22em; text-transform:uppercase; color:var(--accent-text);
+  display:inline-flex; align-items:center; gap:10px;
+}
+.eyebrow::before{ content:""; width:22px; height:1px; background:currentColor; opacity:.6; }
+
+/* ---------- Buttons ---------- */
+.btn{
+  --pad-y:14px; --pad-x:26px;
+  display:inline-flex; align-items:center; justify-content:center; gap:10px;
+  font-family:var(--f-body); font-weight:600; font-size:15px;
+  padding:var(--pad-y) var(--pad-x); border-radius:999px; cursor:pointer;
+  border:1px solid transparent; transition:transform .35s var(--ease), background .3s, color .3s, box-shadow .35s var(--ease);
+  min-height:48px;
+}
+.btn:focus-visible{ outline:3px solid var(--accent-text); outline-offset:3px; }
+.btn-primary{ background:var(--accent-text); color:#fff; box-shadow:0 8px 22px -12px rgba(194,24,26,.9); }
+.btn-primary:hover{ background:var(--accent-ink); transform:translateY(-2px); box-shadow:0 14px 30px -12px rgba(122,15,16,.8); }
+.btn-ghost{ background:transparent; color:var(--ink); border-color:var(--line-strong); }
+.btn-ghost:hover{ border-color:var(--ink); transform:translateY(-2px); }
+.btn .arw{ transition:transform .35s var(--ease); }
+.btn:hover .arw{ transform:translateX(4px); }
+
+/* ---------- Nav ---------- */
+.nav{
+  position:fixed; top:0; left:0; right:0; z-index:60;
+  transition:background .4s var(--ease), box-shadow .4s var(--ease), border-color .4s;
+  border-bottom:1px solid transparent;
+}
+.nav.scrolled{
+  background:rgba(247,245,240,.82);
+  backdrop-filter:saturate(140%) blur(12px);
+  -webkit-backdrop-filter:saturate(140%) blur(12px);
+  border-bottom:1px solid var(--line);
+}
+.nav-inner{ display:flex; align-items:center; justify-content:space-between; height:74px; }
+.nav-links{ display:flex; align-items:center; gap:34px; }
+.nav-links a{ font-size:15px; color:var(--ink-soft); position:relative; padding:6px 0; }
+.nav-links a::after{
+  content:""; position:absolute; left:0; bottom:0; height:1.5px; width:100%;
+  background:var(--accent-text); transform:scaleX(0); transform-origin:right; transition:transform .4s var(--ease);
+}
+.nav-links a:hover::after{ transform:scaleX(1); transform-origin:left; }
+.nav-links a:hover{ color:var(--ink); }
+.nav-cta{ display:flex; align-items:center; gap:18px; }
+.menu-btn{ display:none; background:none; border:0; cursor:pointer; padding:8px; }
+
+/* ---------- Logo (recreated as inline SVG) ---------- */
+.logo{ display:inline-flex; align-items:center; gap:12px; }
+.logo-mark{ width:26px; height:34px; }
+.logo-word{
+  font-family:var(--f-body); font-weight:600; font-size:20px; letter-spacing:0.30em;
+  text-transform:uppercase; color:var(--ink); padding-left:2px;
+}
+.logo-word .a{ color:var(--red); }
+
+/* ---------- Hero ---------- */
+.hero{ position:relative; padding-top:150px; padding-bottom:var(--s-6); }
+.hero-grid{ display:grid; grid-template-columns:1.05fr 0.95fr; gap:clamp(28px,4vw,64px); align-items:center; }
+.hero h1{
+  font-size:clamp(46px, 7.2vw, 92px); letter-spacing:-0.03em;
+  margin-top:26px;
+}
+.hero h1 .em{ font-style:italic; font-weight:500; color:var(--accent-text); }
+.hero-sub{ margin-top:26px; max-width:30ch; color:var(--ink-soft); font-size:clamp(17px,2vw,20px); line-height:1.55; }
+.hero-actions{ display:flex; flex-wrap:wrap; gap:14px; margin-top:34px; }
+
+/* Hero metric row */
+.hero-stats{ display:flex; gap:clamp(20px,3vw,44px); margin-top:52px; flex-wrap:wrap; }
+.hstat .num{ font-family:var(--f-display); font-weight:600; font-size:clamp(30px,4vw,44px); letter-spacing:-0.02em; }
+.hstat .lbl{ font-family:var(--f-mono); font-size:11px; letter-spacing:0.14em; text-transform:uppercase; color:var(--muted); margin-top:4px; }
+
+/* Hero signature: the self-drawing performance curve */
+.hero-viz{
+  position:relative; background:var(--paper-2); border:1px solid var(--line);
+  border-radius:20px; padding:24px; box-shadow:0 40px 80px -60px rgba(26,27,35,.5);
+}
+.viz-head{ display:flex; justify-content:space-between; align-items:baseline; margin-bottom:8px; }
+.viz-head .t{ font-family:var(--f-mono); font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); }
+.viz-head .v{ font-family:var(--f-mono); font-size:13px; font-weight:700; color:var(--accent-text); }
+.viz-chip{
+  position:absolute; top:16px; right:16px; font-family:var(--f-mono); font-size:11px; font-weight:700;
+  background:var(--ink); color:#fff; padding:6px 10px; border-radius:999px; letter-spacing:.06em;
+  display:flex; align-items:center; gap:6px;
+}
+.viz-chip .dot{ width:6px; height:6px; border-radius:50%; background:var(--orange); box-shadow:0 0 0 0 rgba(255,122,24,.6); animation:pulse 2.4s infinite; }
+@keyframes pulse{ 0%{box-shadow:0 0 0 0 rgba(255,122,24,.5)} 70%{box-shadow:0 0 0 8px rgba(255,122,24,0)} 100%{box-shadow:0 0 0 0 rgba(255,122,24,0)} }
+@media (prefers-reduced-motion: reduce){ .viz-chip .dot{ animation:none; } }
+
+/* ---------- Section scaffolding ---------- */
+section{ position:relative; }
+.section-pad{ padding-block:var(--s-6); }
+.section-head{ max-width:56ch; }
+.section-head h2{ font-size:clamp(32px,4.6vw,56px); margin-top:18px; }
+.section-head p{ color:var(--ink-soft); margin-top:18px; font-size:19px; }
+
+/* ---------- Marquee trust bar ---------- */
+.trust{ border-block:1px solid var(--line); padding-block:26px; }
+.trust .lead{ font-family:var(--f-mono); font-size:12px; letter-spacing:.16em; text-transform:uppercase; color:var(--muted); text-align:center; margin-bottom:20px; }
+.marquee{ overflow:hidden; -webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent); mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent); }
+.marquee-track{ display:flex; gap:64px; width:max-content; animation:scroll 34s linear infinite; }
+.marquee:hover .marquee-track{ animation-play-state:paused; }
+.marquee-track span{ font-family:var(--f-display); font-size:24px; font-weight:600; color:var(--line-strong); white-space:nowrap; letter-spacing:-.01em; }
+@keyframes scroll{ to{ transform:translateX(-50%); } }
+@media (prefers-reduced-motion: reduce){ .marquee-track{ animation:none; flex-wrap:wrap; justify-content:center; width:auto; } }
+
+/* ---------- Services ---------- */
+.svc-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:20px; margin-top:var(--s-5); }
+.svc{
+  background:var(--paper-2); border:1px solid var(--line); border-radius:var(--radius);
+  padding:34px 32px; position:relative; overflow:hidden;
+  transition:transform .5s var(--ease), border-color .4s, box-shadow .5s var(--ease);
+}
+.svc::after{ content:""; position:absolute; left:0; top:0; height:3px; width:100%; background:var(--grad); transform:scaleX(0); transform-origin:left; transition:transform .5s var(--ease); }
+.svc:hover{ transform:translateY(-6px); border-color:var(--line-strong); box-shadow:0 30px 50px -34px rgba(26,27,35,.4); }
+.svc:hover::after{ transform:scaleX(1); }
+.svc .tag{ font-family:var(--f-mono); font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--accent-text); }
+.svc h3{ font-size:26px; margin-top:16px; }
+.svc p{ color:var(--ink-soft); margin-top:12px; font-size:16px; }
+.svc .ic{ width:40px; height:40px; color:var(--accent-text); margin-bottom:6px; }
+
+/* ---------- Approach (numbered = genuine sequence) ---------- */
+.approach{ background:var(--ink); color:var(--paper); border-radius:28px; padding:clamp(36px,5vw,72px); }
+.approach .eyebrow{ color:var(--orange); }
+.approach h2{ color:var(--paper); font-size:clamp(30px,4.4vw,52px); margin-top:16px; }
+.steps{ display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin-top:var(--s-5); }
+.step{ padding:28px 22px 26px; border-top:1px solid rgba(247,245,240,.16); position:relative; }
+.step .n{ font-family:var(--f-mono); font-size:13px; color:var(--orange); font-weight:700; letter-spacing:.1em; }
+.step h3{ color:var(--paper); font-size:22px; margin-top:22px; }
+.step p{ color:rgba(247,245,240,.68); font-size:15px; margin-top:12px; }
+.step::before{ content:""; position:absolute; top:-1px; left:0; height:2px; width:0; background:var(--grad); transition:width .8s var(--ease); }
+.step.in::before{ width:38%; }
+
+/* ---------- Results ---------- */
+.results-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:20px; margin-top:var(--s-5); }
+.metric{ border:1px solid var(--line); border-radius:var(--radius); padding:34px 30px; background:var(--paper-2); }
+.metric .big{ font-family:var(--f-display); font-weight:600; font-size:clamp(44px,6vw,68px); letter-spacing:-.03em; line-height:1; background:var(--grad); -webkit-background-clip:text; background-clip:text; color:transparent; }
+.metric .cap{ margin-top:14px; color:var(--ink-soft); font-size:15px; }
+.metric .cap b{ color:var(--ink); font-weight:600; }
+
+/* Featured case */
+.case{ margin-top:24px; display:grid; grid-template-columns:1.1fr 0.9fr; gap:0; border:1px solid var(--line); border-radius:20px; overflow:hidden; background:var(--paper-2); }
+.case .body{ padding:clamp(28px,4vw,52px); }
+.case .tag{ font-family:var(--f-mono); font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--accent-text); }
+.case h3{ font-size:clamp(26px,3vw,38px); margin-top:14px; }
+.case blockquote{ margin:22px 0 0; font-size:19px; line-height:1.5; color:var(--ink-soft); }
+.case .chart{ background:linear-gradient(180deg,#1f2029,#15161d); display:flex; align-items:flex-end; padding:34px; }
+.case-row{ display:flex; gap:30px; margin-top:26px; }
+.case-row .k{ font-family:var(--f-display); font-size:30px; font-weight:600; }
+.case-row .kl{ font-family:var(--f-mono); font-size:11px; text-transform:uppercase; letter-spacing:.12em; color:var(--muted); margin-top:2px; }
+
+/* ---------- Testimonial ---------- */
+.quote{ text-align:center; max-width:22ch; margin-inline:auto; }
+.quote .big{ font-family:var(--f-display); font-weight:500; font-size:clamp(28px,4.4vw,50px); line-height:1.18; letter-spacing:-.02em; max-width:none; }
+.quote .who{ font-family:var(--f-mono); font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); margin-top:30px; }
+
+/* ---------- Final CTA ---------- */
+.cta{ text-align:center; background:var(--grad); border-radius:28px; padding:clamp(48px,7vw,110px) var(--gutter); color:#fff; position:relative; overflow:hidden; }
+.cta h2{ color:#fff; font-size:clamp(36px,6vw,76px); }
+.cta p{ color:rgba(255,255,255,.9); margin-top:20px; font-size:19px; }
+.cta .btn-primary{ background:#fff; color:var(--accent-ink); margin-top:34px; box-shadow:0 16px 40px -18px rgba(0,0,0,.5); }
+.cta .btn-primary:hover{ background:var(--ink); color:#fff; }
+
+/* ---------- Footer ---------- */
+footer{ padding-block:var(--s-5) var(--s-4); border-top:1px solid var(--line); margin-top:var(--s-6); }
+.foot-grid{ display:flex; justify-content:space-between; align-items:flex-start; gap:40px; flex-wrap:wrap; }
+.foot-links{ display:flex; gap:60px; flex-wrap:wrap; }
+.foot-col h4{ font-family:var(--f-mono); font-size:11px; letter-spacing:.16em; text-transform:uppercase; color:var(--muted); margin:0 0 16px; font-weight:700; }
+.foot-col a{ display:block; color:var(--ink-soft); font-size:15px; padding:5px 0; }
+.foot-col a:hover{ color:var(--accent-text); }
+.foot-bottom{ display:flex; justify-content:space-between; margin-top:var(--s-5); padding-top:24px; border-top:1px solid var(--line); font-size:14px; color:var(--muted); flex-wrap:wrap; gap:10px; }
+
+/* ---------- Reveal animation ---------- */
+.reveal{ opacity:0; transform:translateY(26px); transition:opacity .8s var(--ease), transform .8s var(--ease); will-change:opacity,transform; }
+.reveal.in{ opacity:1; transform:none; }
+.reveal[data-d="1"]{ transition-delay:.08s; }
+.reveal[data-d="2"]{ transition-delay:.16s; }
+.reveal[data-d="3"]{ transition-delay:.24s; }
+.reveal[data-d="4"]{ transition-delay:.32s; }
+@media (prefers-reduced-motion: reduce){
+  .reveal{ opacity:1 !important; transform:none !important; transition:none !important; }
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 940px){
+  .hero-grid{ grid-template-columns:1fr; }
+  .hero-viz{ order:-1; }
+  .svc-grid{ grid-template-columns:1fr; }
+  .steps{ grid-template-columns:repeat(2,1fr); }
+  .results-grid{ grid-template-columns:1fr; }
+  .case{ grid-template-columns:1fr; }
+  .case .chart{ min-height:220px; }
+  .nav-links{ display:none; }
+  .menu-btn{ display:inline-flex; }
+  .nav.open .nav-links{
+    display:flex; position:absolute; top:74px; left:0; right:0; flex-direction:column; gap:0;
+    background:var(--paper-2); border-bottom:1px solid var(--line); padding:8px var(--gutter) 20px;
+  }
+  .nav.open .nav-links a{ padding:14px 0; border-bottom:1px solid var(--line); }
+}
+@media (max-width: 560px){
+  body{ font-size:16px; }
+  .steps{ grid-template-columns:1fr; }
+  .hero-stats{ gap:24px 32px; }
+  .foot-links{ gap:32px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ======================= NAV ======================= -->
+<header class="nav" id="nav">
+  <div class="wrap nav-inner">
+    <a href="#top" class="logo" aria-label="Elevane home">
+      <svg class="logo-mark" viewBox="0 0 26 34" aria-hidden="true">
+        <defs>
+          <linearGradient id="elv" x1="0" y1="0" x2="0.3" y2="1">
+            <stop offset="0" stop-color="#FF7A18"/>
+            <stop offset="1" stop-color="#E4231C"/>
+          </linearGradient>
+        </defs>
+        <!-- three ascending "sails" echoing the Elevane mark -->
+        <path d="M2 34 V16 C2 13 4 12 6 16 V34 Z" fill="url(#elv)"/>
+        <path d="M10 34 V9 C10 6 12 5 14 9 V34 Z" fill="url(#elv)"/>
+        <path d="M18 34 V3 C18 0.5 20 -0.5 22 3 V34 Z" fill="url(#elv)"/>
+      </svg>
+      <span class="logo-word">ELEV<span class="a">A</span>NE</span>
+    </a>
+
+    <nav class="nav-links" aria-label="Primary">
+      <a href="#services">Services</a>
+      <a href="#approach">Approach</a>
+      <a href="#results">Results</a>
+      <a href="#contact">Contact</a>
+    </nav>
+
+    <div class="nav-cta">
+      <a href="#contact" class="btn btn-primary">Book a call <span class="arw" aria-hidden="true">→</span></a>
+      <button class="menu-btn" id="menuBtn" aria-label="Toggle menu" aria-expanded="false">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+
+<!-- ======================= HERO ======================= -->
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <span class="eyebrow reveal">Performance marketing studio</span>
+      <h1 class="reveal" data-d="1">Growth you can <span class="em">put a number</span> on.</h1>
+      <p class="hero-sub reveal" data-d="2">Elevane is a paid media studio for brands that want every dollar measured, tested, and multiplied — not guessed.</p>
+      <div class="hero-actions reveal" data-d="3">
+        <a href="#contact" class="btn btn-primary">Book a call <span class="arw" aria-hidden="true">→</span></a>
+        <a href="#results" class="btn btn-ghost">See the results</a>
+      </div>
+      <div class="hero-stats reveal" data-d="4">
+        <div class="hstat"><div class="num" data-count="318" data-suffix="%" data-prefix="+">+318%</div><div class="lbl">Avg. ROAS lift</div></div>
+        <div class="hstat"><div class="num" data-count="240" data-suffix="M" data-prefix="$">$240M</div><div class="lbl">Revenue driven</div></div>
+        <div class="hstat"><div class="num" data-count="94" data-suffix="%">94%</div><div class="lbl">Client retention</div></div>
+      </div>
+    </div>
+
+    <!-- Signature: self-drawing performance curve -->
+    <div class="hero-viz reveal" data-d="2" aria-hidden="true">
+      <div class="viz-chip"><span class="dot"></span> LIVE</div>
+      <div class="viz-head"><span class="t">Blended ROAS · 90 days</span><span class="v">▲ 3.2×</span></div>
+      <svg viewBox="0 0 460 260" width="100%" role="img" aria-label="Ascending performance curve">
+        <defs>
+          <linearGradient id="line" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" stop-color="#FF7A18"/>
+            <stop offset="1" stop-color="#E4231C"/>
+          </linearGradient>
+          <linearGradient id="fill" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="rgba(255,122,24,.22)"/>
+            <stop offset="1" stop-color="rgba(228,35,28,0)"/>
+          </linearGradient>
+        </defs>
+        <!-- gridlines -->
+        <g stroke="#E5DFD3" stroke-width="1">
+          <line x1="0" y1="60" x2="460" y2="60"/>
+          <line x1="0" y1="120" x2="460" y2="120"/>
+          <line x1="0" y1="180" x2="460" y2="180"/>
+          <line x1="0" y1="240" x2="460" y2="240"/>
+        </g>
+        <path id="area" d="M0,232 C70,220 110,196 160,180 C220,160 250,120 300,96 C350,72 400,44 460,22 L460,260 L0,260 Z" fill="url(#fill)" opacity="0"/>
+        <path id="curve" d="M0,232 C70,220 110,196 160,180 C220,160 250,120 300,96 C350,72 400,44 460,22"
+              fill="none" stroke="url(#line)" stroke-width="3.5" stroke-linecap="round"/>
+        <circle id="dotEnd" cx="460" cy="22" r="5" fill="#E4231C" opacity="0"/>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= TRUST ======================= -->
+<section class="trust">
+  <div class="wrap">
+    <p class="lead">Scaling paid media for teams at</p>
+    <div class="marquee">
+      <div class="marquee-track">
+        <span>Northwind</span><span>Lumière</span><span>Cadence</span><span>Vela</span><span>Ориго</span><span>Fathom</span>
+        <span>Northwind</span><span>Lumière</span><span>Cadence</span><span>Vela</span><span>Origo</span><span>Fathom</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= SERVICES ======================= -->
+<section id="services" class="section-pad">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow reveal">What we run</span>
+      <h2 class="reveal" data-d="1">Every channel, held to one standard: return.</h2>
+      <p class="reveal" data-d="2">Full-funnel paid media, built and optimised by operators who report on profit — not vanity metrics.</p>
+    </div>
+
+    <div class="svc-grid">
+      <article class="svc reveal">
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+        <span class="tag">Paid search</span>
+        <h3>Search &amp; Shopping</h3>
+        <p>Google &amp; Bing built around intent and margin — tight query mining, smart bidding guardrails, and feeds that actually convert.</p>
+      </article>
+
+      <article class="svc reveal" data-d="1">
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="M8 13c2 2 6 2 8 0"/><circle cx="9" cy="9" r="1.2" fill="currentColor" stroke="none"/><circle cx="15" cy="9" r="1.2" fill="currentColor" stroke="none"/></svg>
+        <span class="tag">Paid social</span>
+        <h3>Meta, TikTok &amp; more</h3>
+        <p>Thumb-stopping creative paired with disciplined account structure, so spend scales without the efficiency falling off a cliff.</p>
+      </article>
+
+      <article class="svc reveal" data-d="2">
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M4 15l4-4 3 3 5-6 4 4"/><path d="M4 20h16"/></svg>
+        <span class="tag">Creative testing</span>
+        <h3>Creative that compounds</h3>
+        <p>A always-on testing engine — hooks, angles, formats — feeding winners back into the accounts on a weekly cadence.</p>
+      </article>
+
+      <article class="svc reveal" data-d="3">
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M3 3v18h18"/><rect x="7" y="12" width="3" height="6"/><rect x="12" y="8" width="3" height="10"/><rect x="17" y="5" width="3" height="13"/></svg>
+        <span class="tag">Measurement &amp; CRO</span>
+        <h3>Tracking &amp; conversion</h3>
+        <p>Server-side tracking, incrementality tests, and landing-page CRO — so the numbers you optimise on are the numbers that pay.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= APPROACH (sequence) ======================= -->
+<section id="approach" class="section-pad">
+  <div class="wrap">
+    <div class="approach">
+      <span class="eyebrow reveal">How we work</span>
+      <h2 class="reveal" data-d="1">A system, not a scramble.</h2>
+      <div class="steps">
+        <div class="step reveal"><div class="n">01</div><h3>Audit</h3><p>We pressure-test your accounts, tracking, and unit economics to find where money is leaking today.</p></div>
+        <div class="step reveal" data-d="1"><div class="n">02</div><h3>Build</h3><p>Clean account architecture, server-side tracking, and a creative pipeline ready to feed the machine.</p></div>
+        <div class="step reveal" data-d="2"><div class="n">03</div><h3>Test</h3><p>Structured experiments on audience, offer, and creative — one variable at a time, measured to significance.</p></div>
+        <div class="step reveal" data-d="3"><div class="n">04</div><h3>Scale</h3><p>We pour budget into what proves out and cut what doesn't, holding efficiency as spend climbs.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= RESULTS ======================= -->
+<section id="results" class="section-pad">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow reveal">The receipts</span>
+      <h2 class="reveal" data-d="1">Numbers our clients can take to the board.</h2>
+    </div>
+
+    <div class="results-grid">
+      <div class="metric reveal"><div class="big" data-count="4.1" data-decimals="1" data-suffix="×">4.1×</div><div class="cap"><b>Blended ROAS</b> across managed spend, trailing 12 months.</div></div>
+      <div class="metric reveal" data-d="1"><div class="big" data-count="61" data-suffix="%">61%</div><div class="cap"><b>Lower CAC</b> on average within the first 90 days.</div></div>
+      <div class="metric reveal" data-d="2"><div class="big" data-count="12" data-suffix="M+" data-prefix="$">$12M+</div><div class="cap"><b>Monthly ad spend</b> managed profitably and in real time.</div></div>
+    </div>
+
+    <!-- Featured case -->
+    <div class="case reveal">
+      <div class="body">
+        <span class="tag">Case study · DTC skincare</span>
+        <h3>From 1.8× to 4.3× ROAS in two quarters.</h3>
+        <blockquote>"Elevane rebuilt our tracking, tore down the account, and scaled us past $1M/month without losing efficiency. They report like a CFO, not an agency."</blockquote>
+        <div class="case-row">
+          <div><div class="k">+139%</div><div class="kl">Revenue</div></div>
+          <div><div class="k">4.3×</div><div class="kl">ROAS</div></div>
+          <div><div class="k">−42%</div><div class="kl">CAC</div></div>
+        </div>
+      </div>
+      <div class="chart" aria-hidden="true">
+        <svg viewBox="0 0 300 180" width="100%">
+          <defs>
+            <linearGradient id="bar" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FF7A18"/><stop offset="1" stop-color="#E4231C"/></linearGradient>
+          </defs>
+          <g class="bars">
+            <rect class="bar" x="20"  y="180" width="34" height="0" rx="4" fill="url(#bar)" data-h="46"/>
+            <rect class="bar" x="74"  y="180" width="34" height="0" rx="4" fill="url(#bar)" data-h="72"/>
+            <rect class="bar" x="128" y="180" width="34" height="0" rx="4" fill="url(#bar)" data-h="104"/>
+            <rect class="bar" x="182" y="180" width="34" height="0" rx="4" fill="url(#bar)" data-h="132"/>
+            <rect class="bar" x="236" y="180" width="34" height="0" rx="4" fill="url(#bar)" data-h="164"/>
+          </g>
+        </svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= TESTIMONIAL ======================= -->
+<section class="section-pad">
+  <div class="wrap quote">
+    <p class="big reveal">"The first agency that made our paid media feel like a P&amp;L we control."</p>
+    <p class="who reveal" data-d="1">Maya Okafor · VP Growth, Northwind</p>
+  </div>
+</section>
+
+<!-- ======================= FINAL CTA ======================= -->
+<section id="contact" class="section-pad">
+  <div class="wrap">
+    <div class="cta reveal">
+      <h2>Let's find your next 3×.</h2>
+      <p>A 30-minute teardown of your accounts — no pitch deck, just where the money's leaking and what we'd do about it.</p>
+      <a href="mailto:hello@elevane.co" class="btn btn-primary">Book your teardown <span class="arw" aria-hidden="true">→</span></a>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ======================= FOOTER ======================= -->
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div style="max-width:280px">
+        <a href="#top" class="logo" aria-label="Elevane home">
+          <svg class="logo-mark" viewBox="0 0 26 34" aria-hidden="true">
+            <path d="M2 34 V16 C2 13 4 12 6 16 V34 Z" fill="url(#elv)"/>
+            <path d="M10 34 V9 C10 6 12 5 14 9 V34 Z" fill="url(#elv)"/>
+            <path d="M18 34 V3 C18 0.5 20 -0.5 22 3 V34 Z" fill="url(#elv)"/>
+          </svg>
+          <span class="logo-word">ELEV<span class="a">A</span>NE</span>
+        </a>
+        <p style="color:var(--muted); font-size:14px; margin-top:16px; line-height:1.6;">Performance marketing, held to the only metric that matters: return.</p>
+      </div>
+      <div class="foot-links">
+        <div class="foot-col">
+          <h4>Studio</h4>
+          <a href="#services">Services</a>
+          <a href="#approach">Approach</a>
+          <a href="#results">Results</a>
+        </div>
+        <div class="foot-col">
+          <h4>Connect</h4>
+          <a href="mailto:hello@elevane.co">hello@elevane.co</a>
+          <a href="#contact">Book a call</a>
+          <a href="#">LinkedIn</a>
+        </div>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© <span id="yr"></span> Elevane Studio. All rights reserved.</span>
+      <span>Built to load fast on any device.</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+  var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  document.getElementById("yr").textContent = new Date().getFullYear();
+
+  /* --- Nav: scrolled state + mobile menu --- */
+  var nav = document.getElementById("nav");
+  var onScroll = function(){ nav.classList.toggle("scrolled", window.scrollY > 12); };
+  onScroll();
+  window.addEventListener("scroll", onScroll, { passive:true });
+
+  var menuBtn = document.getElementById("menuBtn");
+  menuBtn.addEventListener("click", function(){
+    var open = nav.classList.toggle("open");
+    menuBtn.setAttribute("aria-expanded", open ? "true" : "false");
+  });
+  nav.querySelectorAll(".nav-links a").forEach(function(a){
+    a.addEventListener("click", function(){ nav.classList.remove("open"); menuBtn.setAttribute("aria-expanded","false"); });
+  });
+
+  /* --- Reveal on scroll --- */
+  var reveals = document.querySelectorAll(".reveal");
+  if (reduce){
+    reveals.forEach(function(el){ el.classList.add("in"); });
+  } else {
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if (e.isIntersecting){ e.target.classList.add("in"); io.unobserve(e.target); }
+      });
+    }, { threshold:0.14, rootMargin:"0px 0px -8% 0px" });
+    reveals.forEach(function(el){ io.observe(el); });
+  }
+
+  /* --- Count-up numbers --- */
+  function animateCount(el){
+    var target = parseFloat(el.getAttribute("data-count"));
+    var dec = parseInt(el.getAttribute("data-decimals") || "0", 10);
+    var pre = el.getAttribute("data-prefix") || "";
+    var suf = el.getAttribute("data-suffix") || "";
+    if (reduce){ el.textContent = pre + target.toFixed(dec) + suf; return; }
+    var dur = 1400, start = null;
+    function frame(t){
+      if (!start) start = t;
+      var p = Math.min((t - start)/dur, 1);
+      var eased = 1 - Math.pow(1 - p, 3);
+      el.textContent = pre + (target*eased).toFixed(dec) + suf;
+      if (p < 1) requestAnimationFrame(frame);
+      else el.textContent = pre + target.toFixed(dec) + suf;
+    }
+    requestAnimationFrame(frame);
+  }
+  var counters = document.querySelectorAll("[data-count]");
+  var cio = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){ if (e.isIntersecting){ animateCount(e.target); cio.unobserve(e.target); } });
+  }, { threshold:0.6 });
+  counters.forEach(function(el){ cio.observe(el); });
+
+  /* --- Hero curve self-draw --- */
+  var curve = document.getElementById("curve");
+  var area = document.getElementById("area");
+  var dotEnd = document.getElementById("dotEnd");
+  if (curve){
+    if (reduce){
+      if (area) area.style.opacity = 1;
+      if (dotEnd) dotEnd.setAttribute("opacity","1");
+    } else {
+      var len = curve.getTotalLength();
+      curve.style.strokeDasharray = len;
+      curve.style.strokeDashoffset = len;
+      var drawn = false;
+      var vio = new IntersectionObserver(function(entries){
+        entries.forEach(function(e){
+          if (e.isIntersecting && !drawn){
+            drawn = true;
+            curve.style.transition = "stroke-dashoffset 1.8s cubic-bezier(0.22,1,0.36,1)";
+            curve.style.strokeDashoffset = "0";
+            if (area){ area.style.transition = "opacity 1.2s ease 0.6s"; area.style.opacity = 1; }
+            if (dotEnd){ dotEnd.style.transition = "opacity .4s ease 1.6s"; setTimeout(function(){ dotEnd.setAttribute("opacity","1"); }, 1600); }
+            vio.disconnect();
+          }
+        });
+      }, { threshold:0.4 });
+      vio.observe(curve);
+    }
+  }
+
+  /* --- Case-study bars grow in --- */
+  var bars = document.querySelectorAll(".case .bar");
+  if (bars.length){
+    if (reduce){
+      bars.forEach(function(b){ var h = +b.getAttribute("data-h"); b.setAttribute("y", 180 - h); b.setAttribute("height", h); });
+    } else {
+      var bio = new IntersectionObserver(function(entries){
+        entries.forEach(function(e){
+          if (e.isIntersecting){
+            bars.forEach(function(b, i){
+              var h = +b.getAttribute("data-h");
+              setTimeout(function(){
+                b.style.transition = "y .7s cubic-bezier(0.22,1,0.36,1), height .7s cubic-bezier(0.22,1,0.36,1)";
+                b.setAttribute("y", 180 - h); b.setAttribute("height", h);
+              }, i*90);
+            });
+            bio.disconnect();
+          }
+        });
+      }, { threshold:0.4 });
+      bio.observe(document.querySelector(".case .chart"));
+    }
+  }
+
+  /* --- Approach step bars --- */
+  var steps = document.querySelectorAll(".step");
+  var sio = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){ if (e.isIntersecting){ e.target.classList.add("in"); sio.unobserve(e.target); } });
+  }, { threshold:0.3 });
+  steps.forEach(function(s){ sio.observe(s); });
+})();
+</script>
+</body>
+</html>
