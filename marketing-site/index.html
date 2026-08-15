@@ -50,12 +50,12 @@
 }
 
 *,*::before,*::after{ box-sizing:border-box; }
-html{ scroll-behavior:smooth; -webkit-text-size-adjust:100%; }
+html{ scroll-behavior:smooth; -webkit-text-size-adjust:100%; background:var(--paper); }
 @media (prefers-reduced-motion: reduce){ html{ scroll-behavior:auto; } }
 
 body{
   margin:0;
-  background:var(--paper);
+  background:transparent;
   color:var(--ink);
   font-family:var(--f-body);
   font-size:17px;
@@ -65,13 +65,27 @@ body{
   overflow-x:hidden;
 }
 
-/* Subtle paper grain via layered radial tints (very cheap, no images) */
-body::before{
-  content:"";
-  position:fixed; inset:0; z-index:-1; pointer-events:none;
-  background:
-    radial-gradient(1200px 800px at 78% -10%, rgba(255,122,24,0.06), transparent 60%),
-    radial-gradient(900px 700px at 8% 110%, rgba(228,35,28,0.045), transparent 55%);
+/* ---------- Animated background: drifting, fading lights ---------- */
+.bg-lights{ position:fixed; inset:0; z-index:-1; pointer-events:none; overflow:hidden; }
+.bg-lights .orb{ position:absolute; border-radius:50%; will-change:transform,opacity; }
+.orb-1{ width:56vw; height:56vw; max-width:720px; max-height:720px; left:-12vw; top:-14vh;
+  background:radial-gradient(circle at 50% 50%, rgba(255,122,24,.40), rgba(255,122,24,0) 66%);
+  animation:orb1 20s ease-in-out infinite; }
+.orb-2{ width:48vw; height:48vw; max-width:640px; max-height:640px; right:-14vw; top:6vh;
+  background:radial-gradient(circle at 50% 50%, rgba(228,35,28,.32), rgba(228,35,28,0) 66%);
+  animation:orb2 26s ease-in-out infinite; }
+.orb-3{ width:44vw; height:44vw; max-width:600px; max-height:600px; left:16vw; bottom:-22vh;
+  background:radial-gradient(circle at 50% 50%, rgba(255,150,60,.34), rgba(255,150,60,0) 68%);
+  animation:orb3 23s ease-in-out infinite; }
+.orb-4{ width:38vw; height:38vw; max-width:520px; max-height:520px; right:4vw; bottom:4vh;
+  background:radial-gradient(circle at 50% 50%, rgba(228,80,28,.26), rgba(228,80,28,0) 68%);
+  animation:orb4 30s ease-in-out infinite; }
+@keyframes orb1{ 0%,100%{ transform:translate3d(0,0,0) scale(1);    opacity:.45 } 50%{ transform:translate3d(7vw,6vh,0) scale(1.18);   opacity:.72 } }
+@keyframes orb2{ 0%,100%{ transform:translate3d(0,0,0) scale(1.05); opacity:.38 } 50%{ transform:translate3d(-6vw,4vh,0) scale(1);    opacity:.64 } }
+@keyframes orb3{ 0%,100%{ transform:translate3d(0,0,0) scale(1);    opacity:.32 } 50%{ transform:translate3d(5vw,-6vh,0) scale(1.2);  opacity:.60 } }
+@keyframes orb4{ 0%,100%{ transform:translate3d(0,0,0) scale(1.1);  opacity:.28 } 50%{ transform:translate3d(-4vw,-5vh,0) scale(1);  opacity:.52 } }
+@media (prefers-reduced-motion: reduce){
+  .bg-lights .orb{ animation:none !important; opacity:.34 !important; transform:none !important; }
 }
 
 h1,h2,h3{ font-family:var(--f-display); font-weight:600; line-height:1.02; letter-spacing:-0.02em; margin:0; }
@@ -138,6 +152,26 @@ img,svg{ display:block; max-width:100%; }
   text-transform:uppercase; color:var(--ink); padding-left:2px;
 }
 .logo-word .a{ color:var(--red); }
+
+/* Logo intro — bars rise, letters reveal (plays once on load) */
+#navLogo .logo-mark path{ transform-box:fill-box; transform-origin:50% 100%; transform:scaleY(0); animation:barGrow .9s var(--ease) forwards; }
+#navLogo .logo-mark path:nth-of-type(1){ animation-delay:.25s; }
+#navLogo .logo-mark path:nth-of-type(2){ animation-delay:.40s; }
+#navLogo .logo-mark path:nth-of-type(3){ animation-delay:.55s; }
+@keyframes barGrow{ from{ transform:scaleY(0); } to{ transform:scaleY(1); } }
+#navWord span{ display:inline-block; opacity:0; transform:translateY(10px); animation:letterIn .5s var(--ease) forwards; }
+#navWord span:nth-child(1){ animation-delay:.60s; }
+#navWord span:nth-child(2){ animation-delay:.65s; }
+#navWord span:nth-child(3){ animation-delay:.70s; }
+#navWord span:nth-child(4){ animation-delay:.75s; }
+#navWord span:nth-child(5){ animation-delay:.80s; }
+#navWord span:nth-child(6){ animation-delay:.85s; }
+#navWord span:nth-child(7){ animation-delay:.90s; }
+@keyframes letterIn{ to{ opacity:1; transform:none; } }
+@media (prefers-reduced-motion: reduce){
+  #navLogo .logo-mark path{ transform:none; animation:none; }
+  #navWord span{ opacity:1; transform:none; animation:none; }
+}
 
 /* ---------- Hero ---------- */
 .hero{ position:relative; padding-top:150px; padding-bottom:var(--s-6); }
@@ -293,10 +327,18 @@ footer{ padding-block:var(--s-5) var(--s-4); border-top:1px solid var(--line); m
 </head>
 <body>
 
+<!-- ======================= ANIMATED BACKGROUND LIGHTS ======================= -->
+<div class="bg-lights" id="bgLights" aria-hidden="true">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+  <div class="orb orb-4"></div>
+</div>
+
 <!-- ======================= NAV ======================= -->
 <header class="nav" id="nav">
   <div class="wrap nav-inner">
-    <a href="#top" class="logo" aria-label="Elevane home">
+    <a href="#top" class="logo" id="navLogo" aria-label="Elevane home">
       <svg class="logo-mark" viewBox="0 0 24 34" aria-hidden="true">
         <defs>
           <linearGradient id="elv" x1="0" y1="0" x2="0.22" y2="1">
@@ -309,7 +351,7 @@ footer{ padding-block:var(--s-5) var(--s-4); border-top:1px solid var(--line); m
         <path d="M9 34 L9 19 C9 11 13.5 9 14.5 9 L14.5 34 Z" fill="url(#elv)"/>
         <path d="M17 34 L17 15 C17 5 21.5 2 22.5 2 L22.5 34 Z" fill="url(#elv)"/>
       </svg>
-      <span class="logo-word">ELEV<span class="a">A</span>NE</span>
+      <span class="logo-word" id="navWord" aria-hidden="true"><span>E</span><span>L</span><span>E</span><span>V</span><span class="a">A</span><span>N</span><span>E</span></span>
     </a>
 
     <nav class="nav-links" aria-label="Primary">
@@ -559,7 +601,12 @@ footer{ padding-block:var(--s-5) var(--s-4); border-top:1px solid var(--line); m
 
   /* --- Nav: scrolled state + mobile menu --- */
   var nav = document.getElementById("nav");
-  var onScroll = function(){ nav.classList.toggle("scrolled", window.scrollY > 12); };
+  var lights = document.getElementById("bgLights");
+  var onScroll = function(){
+    var y = window.scrollY;
+    nav.classList.toggle("scrolled", y > 12);
+    if (lights && !reduce){ lights.style.transform = "translate3d(0," + (y * 0.08) + "px,0)"; }
+  };
   onScroll();
   window.addEventListener("scroll", onScroll, { passive:true });
 
