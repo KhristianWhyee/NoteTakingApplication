@@ -290,8 +290,8 @@ footer{ padding-block:var(--s-5) 40px; border-top:1px solid var(--line); }
           <!-- revenue line: starts inside the screen, breaks out the top-right -->
           <path id="curve" d="M85 250 C120 244 135 232 160 214 C185 196 195 176 210 150 C250 118 300 96 340 72 C378 48 405 36 430 26"
                 fill="none" stroke="var(--accent)" stroke-width="2.5" stroke-linecap="round"/>
-          <!-- arrowhead at the breakout tip -->
-          <path id="tip" d="M414 26 L432 24 L429 42" fill="none" stroke="var(--accent)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity="0"/>
+          <!-- arrowhead that rides the line up and out of the screen (positioned via JS) -->
+          <path id="tip" d="M-7 -5 L5 0 L-7 5 Z" fill="var(--accent)" opacity="0"/>
         </svg>
       </div>
     </div>
@@ -490,19 +490,36 @@ footer{ padding-block:var(--s-5) 40px; border-top:1px solid var(--line); }
 
   var curve = document.getElementById("curve"), tip = document.getElementById("tip");
   if (curve){
-    if (reduce){ if (tip) tip.style.opacity = 1; }
-    else {
-      var len = curve.getTotalLength();
-      curve.style.strokeDasharray = len; curve.style.strokeDashoffset = len;
-      var drawn = false;
+    var L = curve.getTotalLength();
+    function placeTip(dist){
+      if (!tip) return;
+      var pt = curve.getPointAtLength(dist);
+      var pb = curve.getPointAtLength(Math.max(0, dist - 1.5));
+      var ang = Math.atan2(pt.y - pb.y, pt.x - pb.x) * 180 / Math.PI;
+      tip.setAttribute("transform", "translate(" + pt.x + "," + pt.y + ") rotate(" + ang + ")");
+    }
+    if (reduce){
+      curve.style.strokeDasharray = "none"; curve.style.strokeDashoffset = "0";
+      if (tip){ placeTip(L); tip.style.opacity = 1; }
+    } else {
+      curve.style.strokeDasharray = L; curve.style.strokeDashoffset = L;
+      placeTip(0);
+      var started = false;
       var vio = new IntersectionObserver(function(entries){
         entries.forEach(function(e){
-          if (e.isIntersecting && !drawn){
-            drawn = true;
-            curve.style.transition = "stroke-dashoffset 1.7s ease";
-            curve.style.strokeDashoffset = "0";
-            if (tip){ tip.style.transition = "opacity .35s ease"; setTimeout(function(){ tip.style.opacity = 1; }, 1500); }
-            vio.disconnect();
+          if (e.isIntersecting && !started){
+            started = true; vio.disconnect();
+            var dur = 1800, t0 = null;
+            if (tip) tip.style.opacity = 1;
+            function step(ts){
+              if (!t0) t0 = ts;
+              var t = Math.min((ts - t0) / dur, 1);
+              var dist = (1 - Math.pow(1 - t, 3)) * L;   /* ease-out along the path */
+              curve.style.strokeDashoffset = (L - dist);
+              placeTip(dist);
+              if (t < 1) requestAnimationFrame(step);
+            }
+            requestAnimationFrame(step);
           }
         });
       }, { threshold:0.4 });
