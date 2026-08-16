@@ -152,12 +152,13 @@ svg{ display:block; max-width:100%; }
 .statement .em{ font-style:italic; color:var(--accent); }
 
 /* ---------- Final CTA: one solid block ---------- */
-.cta{ background:var(--accent); color:var(--on-accent); padding:clamp(52px,8vw,120px) var(--gutter); }
-.cta-in{ max-width:var(--maxw); margin-inline:auto; }
-.cta h2{ color:var(--on-accent); font-size:clamp(38px,6.4vw,84px); font-weight:400; max-width:16ch; }
-.cta p{ color:rgba(22,15,9,.82); margin-top:22px; font-size:19px; max-width:48ch; }
-.cta .btn{ margin-top:38px; background:var(--on-accent); color:var(--accent); border-color:var(--on-accent); }
-.cta .btn:hover{ background:transparent; color:var(--on-accent); }
+.cta{ background:var(--bg); padding:clamp(72px,11vw,168px) 0; border-top:1px solid var(--line); }
+.cta-in{ max-width:var(--maxw); margin-inline:auto; padding-inline:var(--gutter); }
+.cta h2{ color:var(--ink); font-size:clamp(38px,6.4vw,84px); font-weight:400; max-width:16ch; }
+.cta h2 .em{ font-style:italic; color:var(--accent); }
+.cta p{ color:var(--ink-2); margin-top:22px; font-size:19px; max-width:48ch; }
+.cta .btn{ margin-top:38px; background:var(--accent); color:var(--on-accent); border-color:transparent; }
+.cta .btn:hover{ background:var(--ink); color:var(--bg); }
 
 /* ---------- Footer ---------- */
 footer{ padding-block:var(--s-5) 40px; border-top:1px solid var(--line); }
@@ -356,7 +357,7 @@ footer{ padding-block:var(--s-5) 40px; border-top:1px solid var(--line); }
   <!-- ================= FINAL CTA ================= -->
   <section id="contact" class="cta">
     <div class="cta-in">
-      <h2 class="reveal">Let's find your next 3×.</h2>
+      <h2 class="reveal">Let's find your next <span class="em">3×</span>.</h2>
       <p class="reveal" data-d="1">A 30-minute teardown of your accounts. No pitch deck, just where the money leaks and what we would do about it.</p>
       <a href="mailto:hello@elevane.co" class="btn reveal" data-d="2">Book your teardown</a>
     </div>
