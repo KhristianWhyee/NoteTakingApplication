@@ -69,15 +69,15 @@ svg{ display:block; max-width:100%; }
    CINEMATIC INTRO: the three bars own the screen, then rise
    ============================================================ */
 .intro{
-  position:fixed; inset:0; z-index:40; pointer-events:none;
+  position:fixed; inset:0; z-index:70; pointer-events:none;
   display:flex; align-items:center; justify-content:center; flex-direction:column;
-  background:var(--bg); will-change:opacity;
+  will-change:opacity;
 }
-.intro-mark{ will-change:transform,opacity; }
-.intro-mark svg{ width:auto; height:42vh; max-height:400px; }
-.intro-mark .ib{ transform-box:fill-box; transform-origin:50% 100%; }
+.intro-bg{ position:absolute; inset:0; background:var(--bg); z-index:0; }
+.intro-mark{ position:relative; z-index:1; will-change:transform,opacity; }
+.intro-mark svg{ width:auto; height:42vh; max-height:400px; display:block; }
 .intro-cue{
-  position:absolute; bottom:8vh; left:0; right:0; text-align:center;
+  position:absolute; bottom:8vh; left:0; right:0; text-align:center; z-index:1;
   font-family:var(--f-body); font-size:12px; letter-spacing:.3em; text-transform:uppercase; color:var(--muted);
 }
 .intro-spacer{ height:92vh; }
@@ -97,7 +97,7 @@ svg{ display:block; max-width:100%; }
 .logo-mark{ width:24px; height:34px; }
 .logo-word{ font-family:var(--f-body); font-weight:600; font-size:20px; letter-spacing:0.3em; text-transform:uppercase; color:var(--ink); padding-left:2px; }
 .logo-word .a{ color:var(--accent); }
-#navLogo .logo-mark path{ transform-box:fill-box; transform-origin:50% 100%; transform:scaleY(0); will-change:transform; }
+#navLogo .logo-mark{ opacity:0; will-change:opacity; }
 #navWord span{ display:inline-block; opacity:0; transform:translateY(8px); will-change:opacity,transform; }
 
 /* ---------- Hero ---------- */
@@ -180,7 +180,7 @@ footer{ padding-block:var(--s-5) 40px; border-top:1px solid var(--line); }
   .reveal{ opacity:1 !important; transform:none !important; transition:none !important; }
   .intro{ display:none !important; }
   .intro-spacer{ height:0 !important; }
-  #navLogo .logo-mark path{ transform:none !important; }
+  #navLogo .logo-mark{ opacity:1 !important; }
   #navWord span{ opacity:1 !important; transform:none !important; }
 }
 
@@ -208,7 +208,7 @@ footer{ padding-block:var(--s-5) 40px; border-top:1px solid var(--line); }
 </style>
 <noscript><style>
   .intro{ display:none !important; } .intro-spacer{ height:0 !important; }
-  #navLogo .logo-mark path{ transform:none !important; } #navWord span{ opacity:1 !important; transform:none !important; }
+  #navLogo .logo-mark{ opacity:1 !important; } #navWord span{ opacity:1 !important; transform:none !important; }
   .reveal{ opacity:1 !important; transform:none !important; }
 </style></noscript>
 </head>
@@ -216,6 +216,7 @@ footer{ padding-block:var(--s-5) 40px; border-top:1px solid var(--line); }
 
 <!-- ================= CINEMATIC INTRO ================= -->
 <div class="intro" id="intro" aria-hidden="true">
+  <div class="intro-bg"></div>
   <div class="intro-mark" id="introMark">
     <svg viewBox="0 0 24 34" aria-hidden="true">
       <defs>
@@ -404,14 +405,14 @@ footer{ padding-block:var(--s-5) 40px; border-top:1px solid var(--line); }
   var intro = document.getElementById("intro");
   var introMark = document.getElementById("introMark");
   var introCue = document.getElementById("introCue");
-  var introBars = introMark ? introMark.querySelectorAll(".ib") : [];
+  var introBg = intro ? intro.querySelector(".intro-bg") : null;
   var navLogo = document.getElementById("navLogo");
-  var navBars = navLogo ? navLogo.querySelectorAll(".logo-mark path") : [];
+  var navMark = navLogo ? navLogo.querySelector(".logo-mark") : null;
   var navWord = document.getElementById("navWord");
   var navLetters = navWord ? navWord.children : [];
 
   var introEnd = Math.max(window.innerHeight * 0.9, 500);
-  window.addEventListener("resize", function(){ introEnd = Math.max(window.innerHeight * 0.9, 500); onScroll(); }, { passive:true });
+  window.addEventListener("resize", function(){ introEnd = Math.max(window.innerHeight * 0.9, 500); measure(); onScroll(); }, { passive:true });
 
   var menuBtn = document.getElementById("menuBtn");
   menuBtn.addEventListener("click", function(){
@@ -422,13 +423,23 @@ footer{ padding-block:var(--s-5) 40px; border-top:1px solid var(--line); }
     a.addEventListener("click", function(){ nav.classList.remove("open"); menuBtn.setAttribute("aria-expanded","false"); });
   });
 
-  function updateLogo(p){
-    var i;
-    for (i = 0; i < navBars.length; i++){
-      navBars[i].style.transform = "scaleY(" + easeOut(clamp01((p - i*0.10) / 0.45)) + ")";
-    }
-    for (i = 0; i < navLetters.length; i++){
-      var lp = easeOut(clamp01((p - 0.35 - i*0.05) / 0.20));
+  function easeInOut(x){ return x < 0.5 ? 4*x*x*x : 1 - Math.pow(-2*x + 2, 3)/2; }
+
+  /* Measure where the flying bars must land: the real nav-logo mark. */
+  var I0 = null, T = null;
+  function measure(){
+    if (!introMark || !navMark) return;
+    var prev = introMark.style.transform;
+    introMark.style.transform = "none";
+    var a = introMark.getBoundingClientRect(), b = navMark.getBoundingClientRect();
+    I0 = { cx:a.left + a.width/2, cy:a.top + a.height/2, h:a.height };
+    T  = { cx:b.left + b.width/2, cy:b.top + b.height/2, h:b.height };
+    introMark.style.transform = prev;
+  }
+
+  function updateLetters(p){
+    for (var i = 0; i < navLetters.length; i++){
+      var lp = easeOut(clamp01((p - 0.86 - i*0.02) / 0.12));
       navLetters[i].style.opacity = lp;
       navLetters[i].style.transform = "translateY(" + (8*(1-lp)) + "px)";
     }
@@ -438,27 +449,39 @@ footer{ padding-block:var(--s-5) 40px; border-top:1px solid var(--line); }
   function render(){
     var y = window.scrollY;
     nav.classList.toggle("scrolled", y > 12);
-    if (reduce){ updateLogo(1); ticking = false; return; }
+
+    if (reduce){
+      if (navMark) navMark.style.opacity = 1;
+      updateLetters(1);
+      ticking = false; return;
+    }
 
     var p = clamp01(y / introEnd);
-    if (intro){
-      var lift = -(p*p) * introEnd * 1.05;
-      introMark.style.transform = "translateY(" + lift + "px) scale(" + (1 - p*0.55) + ")";
-      introMark.style.opacity = p < 0.65 ? 1 : clamp01(1 - (p - 0.65)/0.35);
-      for (var b = 0; b < introBars.length; b++){
-        introBars[b].style.transform = "translateY(" + (-(p*p) * 55 * (b + 1)) + "px)";
-      }
-      intro.style.opacity = p < 0.5 ? 1 : clamp01(1 - (p - 0.5)/0.5);
+
+    if (intro && I0 && T){
+      /* fly the three bars from screen-center into the exact nav-logo spot */
+      var e = easeInOut(clamp01(p / 0.82));
+      var s = 1 + e * (T.h / I0.h - 1);
+      introMark.style.transform = "translate(" + (e*(T.cx - I0.cx)) + "px," + (e*(T.cy - I0.cy)) + "px) scale(" + s + ")";
+      /* fade the flying mark only after the nav mark is fully in — a crossfade between two identical marks */
+      introMark.style.opacity = p < 0.84 ? 1 : clamp01(1 - (p - 0.84)/0.08);
+      if (introBg) introBg.style.opacity = p < 0.4 ? 1 : clamp01(1 - (p - 0.4)/0.5);
+      if (introCue) introCue.style.opacity = clamp01(1 - p*4);
       intro.style.visibility = p >= 1 ? "hidden" : "visible";
-      if (introCue) introCue.style.opacity = clamp01(1 - p*3.5);
     }
-    if (navInner) navInner.style.opacity = clamp01((p - 0.25)/0.4);
-    updateLogo(clamp01((p - 0.42)/0.58));
+
+    /* nav mark fades in exactly as the flying bars lock into place */
+    if (navMark) navMark.style.opacity = clamp01((p - 0.78) / 0.07);
+    if (navInner) navInner.style.opacity = clamp01((p - 0.5) / 0.22);
+    updateLetters(p);
+
     ticking = false;
   }
   function onScroll(){ if (!ticking){ ticking = true; requestAnimationFrame(render); } }
+  measure();
   render();
   window.addEventListener("scroll", onScroll, { passive:true });
+  window.addEventListener("load", function(){ measure(); render(); });
 
   var reveals = document.querySelectorAll(".reveal");
   if (reduce){ reveals.forEach(function(el){ el.classList.add("in"); }); }
