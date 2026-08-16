@@ -75,17 +75,11 @@ svg{ display:block; max-width:100%; }
 }
 .intro-mark{ will-change:transform,opacity; }
 .intro-mark svg{ width:auto; height:42vh; max-height:400px; }
-.intro-mark .ib{ transform-box:fill-box; transform-origin:50% 100%; animation:barIn .8s cubic-bezier(.22,1,.36,1) both; }
-.intro-mark .ib1{ animation-delay:.15s; }
-.intro-mark .ib2{ animation-delay:.32s; }
-.intro-mark .ib3{ animation-delay:.49s; }
-@keyframes barIn{ from{ transform:scaleY(0); } to{ transform:scaleY(1); } }
+.intro-mark .ib{ transform-box:fill-box; transform-origin:50% 100%; }
 .intro-cue{
   position:absolute; bottom:8vh; left:0; right:0; text-align:center;
   font-family:var(--f-body); font-size:12px; letter-spacing:.3em; text-transform:uppercase; color:var(--muted);
-  animation:cueIn .7s ease .72s both;
 }
-@keyframes cueIn{ from{ opacity:0; transform:translateY(6px); } to{ opacity:1; transform:none; } }
 .intro-spacer{ height:92vh; }
 
 /* ---------- Nav (no glass, no shadow) ---------- */
@@ -448,18 +442,15 @@ footer{ padding-block:var(--s-5) 40px; border-top:1px solid var(--line); }
 
     var p = clamp01(y / introEnd);
     if (intro){
-      if (p > 0){
-        /* once the user scrolls, JS drives the launch (lets the CSS build-in play at rest) */
-        var lift = -(p*p) * introEnd * 1.05;
-        introMark.style.transform = "translateY(" + lift + "px) scale(" + (1 - p*0.55) + ")";
-        for (var b = 0; b < introBars.length; b++){
-          introBars[b].style.transform = "translateY(" + (-(p*p) * 55 * (b + 1)) + "px)";
-        }
-        if (introCue) introCue.style.opacity = clamp01(1 - p*3.5);
-      }
+      var lift = -(p*p) * introEnd * 1.05;
+      introMark.style.transform = "translateY(" + lift + "px) scale(" + (1 - p*0.55) + ")";
       introMark.style.opacity = p < 0.65 ? 1 : clamp01(1 - (p - 0.65)/0.35);
+      for (var b = 0; b < introBars.length; b++){
+        introBars[b].style.transform = "translateY(" + (-(p*p) * 55 * (b + 1)) + "px)";
+      }
       intro.style.opacity = p < 0.5 ? 1 : clamp01(1 - (p - 0.5)/0.5);
       intro.style.visibility = p >= 1 ? "hidden" : "visible";
+      if (introCue) introCue.style.opacity = clamp01(1 - p*3.5);
     }
     if (navInner) navInner.style.opacity = clamp01((p - 0.25)/0.4);
     updateLogo(clamp01((p - 0.42)/0.58));
