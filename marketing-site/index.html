@@ -153,24 +153,12 @@ img,svg{ display:block; max-width:100%; }
 }
 .logo-word .a{ color:var(--red); }
 
-/* Logo intro — bars rise, letters reveal (plays once on load) */
-#navLogo .logo-mark path{ transform-box:fill-box; transform-origin:50% 100%; transform:scaleY(0); animation:barGrow .9s var(--ease) forwards; }
-#navLogo .logo-mark path:nth-of-type(1){ animation-delay:.25s; }
-#navLogo .logo-mark path:nth-of-type(2){ animation-delay:.40s; }
-#navLogo .logo-mark path:nth-of-type(3){ animation-delay:.55s; }
-@keyframes barGrow{ from{ transform:scaleY(0); } to{ transform:scaleY(1); } }
-#navWord span{ display:inline-block; opacity:0; transform:translateY(10px); animation:letterIn .5s var(--ease) forwards; }
-#navWord span:nth-child(1){ animation-delay:.60s; }
-#navWord span:nth-child(2){ animation-delay:.65s; }
-#navWord span:nth-child(3){ animation-delay:.70s; }
-#navWord span:nth-child(4){ animation-delay:.75s; }
-#navWord span:nth-child(5){ animation-delay:.80s; }
-#navWord span:nth-child(6){ animation-delay:.85s; }
-#navWord span:nth-child(7){ animation-delay:.90s; }
-@keyframes letterIn{ to{ opacity:1; transform:none; } }
+/* Logo — scroll-synced build: bars rise + letters reveal, scrubbed by scroll position (set via JS) */
+#navLogo .logo-mark path{ transform-box:fill-box; transform-origin:50% 100%; transform:scaleY(0); will-change:transform; }
+#navWord span{ display:inline-block; opacity:0; transform:translateY(10px); will-change:opacity,transform; }
 @media (prefers-reduced-motion: reduce){
-  #navLogo .logo-mark path{ transform:none; animation:none; }
-  #navWord span{ opacity:1; transform:none; animation:none; }
+  #navLogo .logo-mark path{ transform:none !important; }
+  #navWord span{ opacity:1 !important; transform:none !important; }
 }
 
 /* ---------- Hero ---------- */
@@ -602,13 +590,42 @@ footer{ padding-block:var(--s-5) var(--s-4); border-top:1px solid var(--line); m
   /* --- Nav: scrolled state + mobile menu --- */
   var nav = document.getElementById("nav");
   var lights = document.getElementById("bgLights");
-  var onScroll = function(){
+  var navLogo = document.getElementById("navLogo");
+  var navBars = navLogo ? navLogo.querySelectorAll(".logo-mark path") : [];
+  var navWord = document.getElementById("navWord");
+  var navLetters = navWord ? navWord.children : [];
+  var LOGO_RANGE = 480; /* px of scroll over which the logo fully builds */
+
+  function clamp01(v){ return v < 0 ? 0 : (v > 1 ? 1 : v); }
+  function easeOut(x){ return 1 - Math.pow(1 - x, 3); }
+
+  function updateLogo(p){
+    var i;
+    for (i = 0; i < navBars.length; i++){
+      var bp = easeOut(clamp01((p - i * 0.10) / 0.45));      /* staggered per bar */
+      navBars[i].style.transform = "scaleY(" + bp + ")";
+    }
+    for (i = 0; i < navLetters.length; i++){
+      var lp = easeOut(clamp01((p - 0.35 - i * 0.05) / 0.20)); /* letters reveal after bars */
+      navLetters[i].style.opacity = lp;
+      navLetters[i].style.transform = "translateY(" + (10 * (1 - lp)) + "px)";
+    }
+  }
+
+  var ticking = false;
+  function render(){
     var y = window.scrollY;
     nav.classList.toggle("scrolled", y > 12);
-    if (lights && !reduce){ lights.style.transform = "translate3d(0," + (y * 0.08) + "px,0)"; }
-  };
-  onScroll();
+    if (!reduce){
+      if (lights) lights.style.transform = "translate3d(0," + (y * 0.08) + "px,0)";
+      updateLogo(clamp01(y / LOGO_RANGE));
+    }
+    ticking = false;
+  }
+  function onScroll(){ if (!ticking){ ticking = true; requestAnimationFrame(render); } }
+  render();
   window.addEventListener("scroll", onScroll, { passive:true });
+  window.addEventListener("resize", onScroll, { passive:true });
 
   var menuBtn = document.getElementById("menuBtn");
   menuBtn.addEventListener("click", function(){
