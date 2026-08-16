@@ -442,13 +442,19 @@ footer{ padding-block:var(--s-5) 40px; border-top:1px solid var(--line); }
 
     var p = clamp01(y / introEnd);
     if (intro){
-      var lift = -(p*p) * introEnd * 1.05;
-      introMark.style.transform = "translateY(" + lift + "px) scale(" + (1 - p*0.55) + ")";
-      introMark.style.opacity = p < 0.65 ? 1 : clamp01(1 - (p - 0.65)/0.35);
+      var lift = -(p*p) * introEnd * 0.85;
+      introMark.style.transform = "translateY(" + lift + "px) scale(" + (1 - p*0.5) + ")";
+      introMark.style.opacity = p < 0.7 ? 1 : clamp01(1 - (p - 0.7)/0.3);
+      /* each bar rockets at its own speed, fans out, tilts, and stretches for velocity */
       for (var b = 0; b < introBars.length; b++){
-        introBars[b].style.transform = "translateY(" + (-(p*p) * 55 * (b + 1)) + "px)";
+        var vy = -(p*p) * introEnd * (0.55 + b*0.34);
+        var vx = (b - 1) * p * 48;
+        var rot = (b - 1) * p * 11;
+        var st = 1 + p * 0.6;
+        introBars[b].style.transform =
+          "translate(" + vx + "px," + vy + "px) rotate(" + rot + "deg) scaleY(" + st + ")";
       }
-      intro.style.opacity = p < 0.5 ? 1 : clamp01(1 - (p - 0.5)/0.5);
+      intro.style.opacity = p < 0.55 ? 1 : clamp01(1 - (p - 0.55)/0.45);
       intro.style.visibility = p >= 1 ? "hidden" : "visible";
       if (introCue) introCue.style.opacity = clamp01(1 - p*3.5);
     }
