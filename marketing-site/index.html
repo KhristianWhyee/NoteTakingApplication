@@ -123,9 +123,15 @@ svg{ display:block; max-width:100%; }
 .section-head h2{ font-size:clamp(36px,5.4vw,68px); margin-top:16px; font-weight:400; }
 .section-head h2 .em{ font-style:italic; color:var(--accent); }
 .section-head p{ color:var(--ink-2); margin-top:18px; font-size:19px; }
-.lede-copy{ max-width:64ch; margin-top:var(--s-5); }
-.lede-copy p{ color:var(--ink-2); font-size:clamp(18px,2.1vw,22px); line-height:1.55; }
-.lede-copy p + p{ margin-top:24px; }
+/* Who we work with: asymmetric editorial split */
+.fit-grid{ display:grid; grid-template-columns:1.15fr 0.85fr; gap:clamp(28px,6vw,88px); align-items:start; }
+.fit-title{ font-size:clamp(34px,5.4vw,66px); font-weight:400; line-height:1.04; letter-spacing:-0.02em; color:var(--ink); }
+.fit-title .em{ font-style:italic; color:var(--accent); }
+.fit-body{ border-top:1px solid var(--line-2); padding-top:20px; }
+.fit-label{ display:block; font-size:12px; letter-spacing:.2em; text-transform:uppercase; color:var(--muted); margin-bottom:16px; }
+.fit-body p{ color:var(--ink-2); font-size:clamp(17px,1.7vw,20px); line-height:1.62; margin:0; }
+.fit-hi{ color:var(--ink); font-weight:600; }
+@media (max-width:940px){ .fit-grid{ grid-template-columns:1fr; } }
 
 /* ---------- Services: editorial rows, no cards/icons ---------- */
 .rows{ margin-top:var(--s-5); border-top:1px solid var(--line); }
@@ -337,13 +343,11 @@ footer{ padding-block:var(--s-5) 40px; border-top:1px solid var(--line); }
 
   <!-- ================= WHO WE WORK WITH ================= -->
   <section id="fit" class="section">
-    <div class="wrap">
-      <div class="section-head">
-        <span class="eyebrow reveal">Who we work with</span>
-        <h2 class="reveal" data-d="1">We don't work with everyone. <span class="em">And we don't pretend to.</span></h2>
-      </div>
-      <div class="lede-copy reveal" data-d="2">
-        <p>Elevayne partners only with established service businesses that already have a proven operation and the capacity to handle more volume. If you are a brand-new contractor chasing your first few jobs, or you are hunting for a cheap, overnight fix, we are not the right fit.</p>
+    <div class="wrap fit-grid">
+      <h2 class="fit-title reveal">We don't work with everyone.<br><span class="em">And we don't pretend to.</span></h2>
+      <div class="fit-body reveal" data-d="1">
+        <span class="fit-label">A note on fit</span>
+        <p>Elevayne partners only with established service businesses that already have a proven operation and the capacity to handle more volume. If you are a brand-new contractor chasing your first few jobs, or hunting for a cheap, overnight fix, <span class="fit-hi">we are not the right fit</span>.</p>
       </div>
     </div>
   </section>
