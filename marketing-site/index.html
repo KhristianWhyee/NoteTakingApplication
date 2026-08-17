@@ -133,6 +133,29 @@ svg{ display:block; max-width:100%; }
 .fit-hi{ color:var(--ink); font-weight:600; }
 @media (max-width:940px){ .fit-grid{ grid-template-columns:1fr; } }
 
+/* Varied section layouts */
+.split-2{ display:grid; grid-template-columns:0.85fr 1.15fr; gap:clamp(28px,6vw,80px); align-items:start; }
+.split-head{ position:sticky; top:100px; }
+.split-head h2{ font-size:clamp(30px,3.6vw,50px); margin-top:16px; font-weight:400; letter-spacing:-0.02em; }
+.split-head p{ color:var(--ink-2); margin-top:18px; font-size:18px; max-width:34ch; }
+.split-2 .rows{ margin-top:0; border-top:0; }
+.split-2 .row{ grid-template-columns:40px 1fr; }
+.split-2 .row .lede{ grid-column:2; margin-top:6px; }
+.approach-head{ text-align:center; margin-bottom:var(--s-5); }
+.approach-head h2{ font-size:clamp(34px,5vw,60px); margin-top:14px; font-weight:400; letter-spacing:-0.02em; }
+.steps{ margin-top:0; }
+.step .n{ font-size:clamp(40px,4.6vw,60px); }
+.split-flip .split-head{ order:2; }
+.split-flip .figs{ order:1; display:block; border-top:0; margin-top:0; }
+.split-flip .fig{ padding:26px 0; border-bottom:1px solid var(--line); flex:none; }
+.split-flip .fig:first-child{ padding-top:0; }
+@media (max-width:940px){
+  .split-2{ grid-template-columns:1fr; }
+  .split-head{ position:static; }
+  .split-flip .split-head{ order:0; }
+  .split-flip .figs{ order:0; }
+}
+
 /* ---------- Services: editorial rows, no cards/icons ---------- */
 .rows{ margin-top:var(--s-5); border-top:1px solid var(--line); }
 .row{ display:grid; grid-template-columns:64px 1fr 1.2fr; gap:clamp(16px,4vw,56px); align-items:baseline; padding:34px 0; border-bottom:1px solid var(--line); }
@@ -310,11 +333,11 @@ footer{ padding-block:var(--s-5) 40px; border-top:1px solid var(--line); }
 
   <!-- ================= SERVICES ================= -->
   <section id="services" class="section">
-    <div class="wrap">
-      <div class="section-head">
-        <span class="eyebrow reveal">What we do</span>
-        <h2 class="reveal" data-d="1">One job: fill your calendar with clients.</h2>
-        <p class="reveal" data-d="2">We run Meta ads for service businesses and turn the clicks into booked, qualified appointments.</p>
+    <div class="wrap split-2">
+      <div class="split-head reveal">
+        <span class="eyebrow">What we do</span>
+        <h2>One job: fill your calendar with clients.</h2>
+        <p>We run Meta ads for service businesses and turn the clicks into booked, qualified appointments.</p>
       </div>
       <div class="rows">
         <div class="row reveal"><div class="idx">01</div><h3>Meta ads, managed</h3><div class="lede"><span class="k">Facebook and Instagram</span>We plan, build, and run your Meta ad campaigns from start to finish.</div></div>
@@ -328,9 +351,9 @@ footer{ padding-block:var(--s-5) 40px; border-top:1px solid var(--line); }
   <!-- ================= APPROACH ================= -->
   <section id="approach" class="section">
     <div class="wrap">
-      <div class="section-head">
-        <span class="eyebrow reveal">How we work</span>
-        <h2 class="reveal" data-d="1">A system, not a scramble.</h2>
+      <div class="approach-head reveal">
+        <span class="eyebrow">How we work</span>
+        <h2>A system, not a scramble.</h2>
       </div>
       <div class="steps">
         <div class="step reveal"><div class="n">01</div><h3>Strategy</h3><p>We build an offer your ideal clients want.</p></div>
@@ -354,17 +377,17 @@ footer{ padding-block:var(--s-5) 40px; border-top:1px solid var(--line); }
 
   <!-- ================= RESULTS ================= -->
   <section id="results" class="section">
-    <div class="wrap">
-      <div class="section-head">
-        <span class="eyebrow reveal">The receipts</span>
-        <h2 class="reveal" data-d="1">Results we can put a number on.</h2>
+    <div class="wrap split-2 split-flip">
+      <div class="split-head reveal">
+        <span class="eyebrow">The receipts</span>
+        <h2>Results we can put a number on.</h2>
+        <p class="figs-note">Figures shown are placeholders. Replace with your verified account numbers before launch.</p>
       </div>
       <div class="figs">
         <div class="fig reveal"><div class="big" data-count="3.2" data-decimals="1" data-suffix="×">3.2×</div><div class="cap"><b>More booked appointments</b> on average within the first 90 days.</div></div>
         <div class="fig reveal" data-d="1"><div class="big" data-count="42" data-suffix="%">42%</div><div class="cap"><b>Lower cost</b> per booked appointment on average.</div></div>
         <div class="fig reveal" data-d="2"><div class="big" data-count="10" data-suffix="K+">10K+</div><div class="cap"><b>Appointments booked</b> for service businesses to date.</div></div>
       </div>
-      <p class="figs-note reveal">Figures shown are placeholders. Replace with your verified account numbers before launch.</p>
     </div>
   </section>
 
