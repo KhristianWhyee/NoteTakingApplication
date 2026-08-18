@@ -123,6 +123,15 @@ svg{ display:block; max-width:100%; }
 .section-head h2{ font-size:clamp(36px,5.4vw,68px); margin-top:16px; font-weight:400; }
 .section-head h2 .em{ font-style:italic; color:var(--accent); }
 .section-head p{ color:var(--ink-2); margin-top:18px; font-size:19px; }
+/* FAQ accordion */
+.faq{ max-width:840px; margin-top:var(--s-5); border-top:1px solid var(--line); }
+.faq details{ border-bottom:1px solid var(--line); }
+.faq summary{ list-style:none; cursor:pointer; display:flex; justify-content:space-between; align-items:baseline; gap:24px; padding:26px 0; font-family:var(--f-display); font-weight:400; font-size:clamp(20px,2.4vw,27px); color:var(--ink); letter-spacing:-0.01em; }
+.faq summary::-webkit-details-marker{ display:none; }
+.faq summary::after{ content:"+"; flex:none; color:var(--accent); font-family:var(--f-body); font-size:24px; line-height:1; }
+.faq details[open] summary::after{ content:"\2212"; }
+.faq summary:focus-visible{ outline:2px solid var(--accent-2); outline-offset:3px; }
+.faq details p{ color:var(--ink-2); font-size:17px; line-height:1.62; padding:0 0 28px; max-width:66ch; margin:0; }
 /* Who we work with: asymmetric editorial split */
 .fit-grid{ display:grid; grid-template-columns:1.15fr 0.85fr; gap:clamp(28px,6vw,88px); align-items:start; }
 .fit-title{ font-size:clamp(34px,5.4vw,66px); font-weight:400; line-height:1.04; letter-spacing:-0.02em; color:var(--ink); }
@@ -395,6 +404,42 @@ footer{ padding-block:var(--s-5) 40px; border-top:1px solid var(--line); }
   <section class="section">
     <div class="wrap">
       <p class="statement reveal">We would rather lose the pitch than promise a number we <span class="em">cannot defend.</span></p>
+    </div>
+  </section>
+
+  <!-- ================= FAQ ================= -->
+  <section id="faq" class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow reveal">Questions</span>
+        <h2 class="reveal" data-d="1">Before you book a call.</h2>
+      </div>
+      <div class="faq reveal" data-d="2">
+        <details>
+          <summary>How fast will I see booked appointments?</summary>
+          <p>Most clients see the first booked calls within two to three weeks. The early days are about gathering data and finding the angles that work, and it compounds from there.</p>
+        </details>
+        <details>
+          <summary>How much do I need to spend on ads?</summary>
+          <p>Your ad budget is separate from our fee and goes straight to Meta. We will give you a realistic starting number for your market and service on the first call, based on how many appointments you want to book.</p>
+        </details>
+        <details>
+          <summary>I have been burned by an agency before. Why is this different?</summary>
+          <p>Fair. We only take on clients we are confident we can get results for, we report on booked appointments rather than vanity metrics, and we tell you plainly when something is not working.</p>
+        </details>
+        <details>
+          <summary>Do I need to already run ads or have a big following?</summary>
+          <p>No. We build the campaigns, tracking, and follow-up from scratch. An existing page and a reliable way to answer enquiries is enough to start.</p>
+        </details>
+        <details>
+          <summary>What kind of businesses do you work with?</summary>
+          <p>Established service businesses with a proven offer and the capacity to take on more work. If you are brand new or looking for the cheapest option, we are probably not the right fit.</p>
+        </details>
+        <details>
+          <summary>What happens on the first call?</summary>
+          <p>A 30-minute conversation about your business, your numbers, and whether Meta ads are a fit. No pitch deck. If we are not the right partner, we will tell you.</p>
+        </details>
+      </div>
     </div>
   </section>
 
