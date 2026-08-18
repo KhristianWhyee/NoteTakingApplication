@@ -17,15 +17,15 @@
    no icons, no cards, no decorative motion.
    ============================================================ */
 :root{
-  --bg:      #17191C;   /* charcoal                        */
-  --ink:     #ECEEF1;   /* near-white (headings)           */
-  --ink-2:   #BFC4CB;   /* body text                       */
-  --muted:   #868D97;   /* labels / secondary              */
-  --line:    rgba(233,236,240,.12);
-  --line-2:  rgba(233,236,240,.24);
-  --accent:  #1FD4C7;   /* electric teal                   */
-  --accent-2:#5FE7DC;   /* light teal for small text       */
-  --on-accent:#0C0E10;
+  --bg:      #0E1626;   /* midnight navy                   */
+  --ink:     #EEF1F7;   /* cool near-white (headings)      */
+  --ink-2:   #C3CAD9;   /* body text                       */
+  --muted:   #8B95AB;   /* labels / secondary              */
+  --line:    rgba(226,232,240,.14);
+  --line-2:  rgba(226,232,240,.26);
+  --accent:  #B4703C;   /* copper                          */
+  --accent-2:#D89A63;   /* light copper for small text     */
+  --on-accent:#FDF8F1;
 
   --f-display: "Instrument Serif", Georgia, "Times New Roman", serif;
   --f-body:    "Instrument Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
@@ -253,7 +253,7 @@ footer{ padding-block:var(--s-5) 40px; border-top:1px solid var(--line); }
   <div class="intro-mark" id="introMark">
     <svg viewBox="0 0 24 34" aria-hidden="true">
       <defs>
-        <linearGradient id="ig" x1="0" y1="0" x2="0.22" y2="1"><stop offset="0" stop-color="#5FE7DC"/><stop offset="1" stop-color="#12A79E"/></linearGradient>
+        <linearGradient id="ig" x1="0" y1="0" x2="0.22" y2="1"><stop offset="0" stop-color="#D89A63"/><stop offset="1" stop-color="#A85E2E"/></linearGradient>
       </defs>
       <path class="ib ib1" d="M1 34 L1 23 C1 17.5 5.5 16 6.5 16 L6.5 34 Z" fill="url(#ig)"/>
       <path class="ib ib2" d="M9 34 L9 19 C9 11 13.5 9 14.5 9 L14.5 34 Z" fill="url(#ig)"/>
@@ -269,7 +269,7 @@ footer{ padding-block:var(--s-5) 40px; border-top:1px solid var(--line); }
     <a href="#top" class="logo" id="navLogo" aria-label="Elevayne home">
       <svg class="logo-mark" viewBox="0 0 24 34" aria-hidden="true">
         <defs>
-          <linearGradient id="elv" x1="0" y1="0" x2="0.22" y2="1"><stop offset="0" stop-color="#5FE7DC"/><stop offset="1" stop-color="#12A79E"/></linearGradient>
+          <linearGradient id="elv" x1="0" y1="0" x2="0.22" y2="1"><stop offset="0" stop-color="#D89A63"/><stop offset="1" stop-color="#A85E2E"/></linearGradient>
         </defs>
         <path d="M1 34 L1 23 C1 17.5 5.5 16 6.5 16 L6.5 34 Z" fill="url(#elv)"/>
         <path d="M9 34 L9 19 C9 11 13.5 9 14.5 9 L14.5 34 Z" fill="url(#elv)"/>
@@ -314,13 +314,13 @@ footer{ padding-block:var(--s-5) 40px; border-top:1px solid var(--line); }
         <div class="label">Booked appointments, last 12 months</div>
         <svg viewBox="0 0 460 320" role="img" aria-label="A revenue line rising up and out of a computer screen">
           <!-- desk surface -->
-          <line x1="0" y1="290" x2="460" y2="290" stroke="rgba(233,236,240,.10)" stroke-width="1"/>
+          <line x1="0" y1="290" x2="460" y2="290" stroke="rgba(226,232,240,.10)" stroke-width="1"/>
           <!-- monitor -->
-          <rect x="58" y="150" width="190" height="120" fill="none" stroke="rgba(233,236,240,.28)" stroke-width="1.5"/>
-          <line x1="58" y1="208" x2="248" y2="208" stroke="rgba(233,236,240,.10)" stroke-width="1"/>
-          <line x1="58" y1="240" x2="248" y2="240" stroke="rgba(233,236,240,.10)" stroke-width="1"/>
-          <path d="M150 270 L160 270 L164 288 L146 288 Z" fill="none" stroke="rgba(233,236,240,.28)" stroke-width="1.5"/>
-          <line x1="118" y1="288" x2="196" y2="288" stroke="rgba(233,236,240,.28)" stroke-width="1.5"/>
+          <rect x="58" y="150" width="190" height="120" fill="none" stroke="rgba(226,232,240,.28)" stroke-width="1.5"/>
+          <line x1="58" y1="208" x2="248" y2="208" stroke="rgba(226,232,240,.10)" stroke-width="1"/>
+          <line x1="58" y1="240" x2="248" y2="240" stroke="rgba(226,232,240,.10)" stroke-width="1"/>
+          <path d="M150 270 L160 270 L164 288 L146 288 Z" fill="none" stroke="rgba(226,232,240,.28)" stroke-width="1.5"/>
+          <line x1="118" y1="288" x2="196" y2="288" stroke="rgba(226,232,240,.28)" stroke-width="1.5"/>
           <!-- revenue line: starts inside the screen, breaks out the top-right -->
           <path id="curve" d="M85 250 C120 244 135 232 160 214 C185 196 195 176 210 150 C250 118 300 96 340 72 C378 48 405 36 430 26"
                 fill="none" stroke="var(--accent)" stroke-width="2.5" stroke-linecap="round"/>
